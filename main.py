@@ -73,25 +73,25 @@ def contact():
             con.number = number
             con.message = message
             con.dt = datetime.datetime.now()
+            db.session.add(con)
+            db.session.commit()
 
             print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
 
-            with smtplib.SMTP("smtp.gmail.com") as connection:
-                connection.starttls()
-                connection.login(user=email_login, password=email_login_psw)
-                connection.sendmail(from_addr=email_login,
-                                    to_addrs="rocco.caliandro@toptal.com",
-                                    msg=f"Subject: Message from {name} {surname} with email: {email}\n\n"
-                                        f"You've received a message from {name} {surname} with email: {email}"
-                                        f"at {con.dt}  o'clock.\nThe contact number is: {number}.\n\n\n"
-                                        f"Let's think to the content of the message:\n\n\n\n {message}\n\n"
-                                        f"by: {email}")
+            """"           with smtplib.SMTP("smtp.gmail.com") as connection:
+                            connection.starttls()
+                            connection.login(user=email_login, password=email_login_psw)
+                            connection.sendmail(from_addr=email_login,
+                                                to_addrs="rocco.caliandro@toptal.com",
+                                                msg=f"Subject: Message from {name} {surname} with email: {email}\n\n"
+                                                    f"You've received a message from {name} {surname} with email: {email}"
+                                                    f"at {con.dt}  o'clock.\nThe contact number is: {number}.\n\n\n"
+                                                    f"Let's think to the content of the message:\n\n\n\n {message}\n\n"
+                                                    f"by: {email}")
 
-                db.session.add(con)
-                db.session.commit()
-        except Exception as e:
-            print("ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOEEEEEEEEEEEEEEEE")
-            print("The winner is: " + str(e))
+                            """
+
+        except:
             return render_template("index.html", form_complete=0)
 
         return render_template("index.html", form_complete=1)
