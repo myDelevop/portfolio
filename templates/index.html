@@ -47,12 +47,15 @@
 
             if (formComplete) {
                 // Select the success message div by its id
-                var successMessage = document.getElementById('success-message');
-
-                // Remove the message after 5 seconds
+                let successMessage = document.getElementById('success-message');
+                let errorMessage = document.getElementById('error-form-message');
+                // Remove the message after 20 seconds
                 setTimeout(function () {
                     successMessage.style.display = 'none';
-                }, 4000); // 4000 milliseconds = 3 seconds
+                }, 4000); // 4000 milliseconds = 4 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = 'none';
+                }, 20000);
             }
         </script>
     </body>
