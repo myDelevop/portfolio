@@ -6,7 +6,7 @@ from flask_bootstrap import Bootstrap5
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, EmailField, TelField, TextAreaField, DateTimeField
+from wtforms import StringField, SubmitField, EmailField, TelField, TextAreaField, DateTimeLocalField
 from wtforms.validators import DataRequired
 
 email_to = os.getenv("EMAIL_TO")
@@ -28,7 +28,7 @@ class Contact(db.Model):
     surname = db.Column(db.String(25), nullable=False)
     number = db.Column(db.String(15), nullable=False)
     message = db.Column(db.String(450), nullable=False)
-    dt = db.Column(db.DateTimeField, nullable=False)
+    dt = db.Column(db.DateTime, nullable=False)
 
 
 class ContactForm(FlaskForm):
@@ -82,8 +82,8 @@ def contact():
                                     to_addrs="rocco.caliandro@toptal.com",
                                     msg=f"Subject: Message from {name} {surname} with email: {email}\n\n"
                                         f"You've received a message from {name} {surname} with email: {email}"
-                                        f"at {con.dt}  o'clock. The contact number is: {number}.\n"
-                                        f"Let's think to the content of the message:\n\n {message}\n\n"
+                                        f"at {con.dt}  o'clock.\nThe contact number is: {number}.\n\n\n"
+                                        f"Let's think to the content of the message:\n\n\n\n {message}\n\n"
                                         f"by: {email}")
         except:
             return render_template("index.html", form_complete=0)
