@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include 'header.html' %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rocco's Portfolio</title>
+</head>
+
+    <body style="overflow-y: hidden;">
+        <header class="masthead" style="background-image: url('{{ url_for('static', filename='assets/img/index_background.png') }}')">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="site-heading">
+                            {% if form_complete: %}
+                                <div id="success-message" class="alert alert-success" role="alert">
+                                    <h4>Thanks for getting in touch!</h4>
+                                </div>
+                            {% endif %}
+                            <h1>Rocco's Portfolio</h1>
+                            <!-- <span class="subheading">A collection of Rocco's random musings.</span> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <script>
+            // Check if form_complete is True
+            var formComplete = {% if form_complete %}true{% else %}false{% endif %}
+
+            if (formComplete) {
+                // Select the success message div by its id
+                var successMessage = document.getElementById('success-message');
+
+                // Remove the message after 5 seconds
+                setTimeout(function () {
+                    successMessage.style.display = 'none';
+                }, 4000); // 4000 milliseconds = 3 seconds
+            }
+        </script>
+    </body>
+
+</html>
