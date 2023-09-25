@@ -7,7 +7,7 @@ from wtforms.validators import DataRequired
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
-app.config['SECRET_KEY'] = os.environ.get("PORTFOLIO_SECRET_KEY")
+app.config['SECRET_KEY'] = os.getenv("PORTFOLIO_SECRET_KEY")
 
 
 class ContactForm(FlaskForm):
