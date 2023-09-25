@@ -15,7 +15,8 @@ email_login_psw = os.getenv("EMAIL_FROM_psw")
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("PORTFOLIO_SECRET_KEY")
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///contacts.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI_PORFOLIO")
+
 bootstrap = Bootstrap5(app)
 db = SQLAlchemy()
 db.init_app(app)
