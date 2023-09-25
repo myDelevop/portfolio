@@ -65,17 +65,17 @@ def contact():
         number = request.form.get("number")
         message = request.form.get("message")
 
-        con = Contact()
-        con.name = name
-        con.surname = surname
-        con.email = email
-        con.number = number
-        con.message = message
-        con.dt = datetime.datetime.now()
-
-        db.session.add(con)
-        db.session.commit()
         try:
+            con = Contact()
+            con.name = name
+            con.surname = surname
+            con.email = email
+            con.number = number
+            con.message = message
+            con.dt = datetime.datetime.now()
+
+            print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+
             with smtplib.SMTP("smtp.gmail.com") as connection:
                 connection.starttls()
                 connection.login(user=email_login, password=email_login_psw)
@@ -86,7 +86,12 @@ def contact():
                                         f"at {con.dt}  o'clock.\nThe contact number is: {number}.\n\n\n"
                                         f"Let's think to the content of the message:\n\n\n\n {message}\n\n"
                                         f"by: {email}")
-        except:
+
+                db.session.add(con)
+                db.session.commit()
+        except Exception as e:
+            print("ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOEEEEEEEEEEEEEEEE")
+            print("The winner is: " + str(e))
             return render_template("index.html", form_complete=0)
 
         return render_template("index.html", form_complete=1)
