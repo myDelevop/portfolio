@@ -1,11 +1,12 @@
 import os
 import smtplib
 
+import datetime
 from flask_bootstrap import Bootstrap5
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, EmailField, TelField, TextAreaField
+from wtforms import StringField, SubmitField, EmailField, TelField, TextAreaField, DateTimeField
 from wtforms.validators import DataRequired
 
 email_to = os.getenv("EMAIL_TO")
@@ -27,6 +28,7 @@ class Contact(db.Model):
     surname = db.Column(db.String(25), nullable=False)
     number = db.Column(db.String(15), nullable=False)
     message = db.Column(db.String(450), nullable=False)
+    dt = db.Column(db.DateTimeField, nullable=False)
 
 
 class ContactForm(FlaskForm):
@@ -68,6 +70,7 @@ def contact():
         con.email = email
         con.number = number
         con.message = message
+        con.dt = datetime.datetime.now()
 
         db.session.add(con)
         db.session.commit()
@@ -75,10 +78,13 @@ def contact():
             with smtplib.SMTP("smtp.gmail.com") as connection:
                 connection.starttls()
                 connection.login(user=email_login, password=email_login_psw)
-
-                connection.sendmail(from_addr=email,
+                connection.sendmail(from_addr=email_login,
                                     to_addrs="rocco.caliandro@toptal.com",
-                                    msg=message)
+                                    msg=f"Subject: Message from {name} {surname} with email: {email}\n\n"
+                                        f"You've received a message from {name} {surname} with email: {email}"
+                                        f"at {con.dt}  o'clock. The contact number is: {number}.\n"
+                                        f"Let's think to the content of the message:\n\n {message}\n\n"
+                                        f"by: {email}")
         except:
             return render_template("index.html", form_complete=0)
 
