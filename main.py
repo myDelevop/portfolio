@@ -1,12 +1,12 @@
 import os
-from flask_bootstrap import Bootstrap
+from flask_bootstrap import  Bootstrap5
 from flask import Flask, render_template, request, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, EmailField, TelField, TextAreaField
 from wtforms.validators import DataRequired
 
 app = Flask(__name__)
-bootstrap = Bootstrap(app)
+bootstrap = Bootstrap5(app)
 app.config['SECRET_KEY'] = os.getenv("PORTFOLIO_SECRET_KEY")
 
 
