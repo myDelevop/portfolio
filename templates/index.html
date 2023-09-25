@@ -14,11 +14,25 @@
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <div class="site-heading">
-                            {% if form_complete: %}
-                                <div id="success-message" class="alert alert-success" role="alert">
+                            {% if form_complete == 1: %}
+                                <div id="success-form-message" class="alert alert-success" role="alert">
                                     <h4>Thanks for getting in touch!</h4>
                                 </div>
                             {% endif %}
+
+                            {% if form_complete == 0: %}
+                                <div id="error-form-message" class="alert alert-error" role="alert">
+                                    <h4>Error during submitting contact form</h4>
+                                </div>
+                            {% endif %}
+
+                            {% if form_error: %}
+                                <div id="error-message" class="alert alert-error" role="alert">
+                                    <h4>Error during submit contact in touch!</h4>
+                                </div>
+                            {% endif %}
+
+
                             <h1>Rocco's Portfolio</h1>
                             <!-- <span class="subheading">A collection of Rocco's random musings.</span> -->
                         </div>

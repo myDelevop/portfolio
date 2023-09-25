@@ -1,7 +1,7 @@
 import os
 import smtplib
 
-from flask_bootstrap import  Bootstrap5
+from flask_bootstrap import Bootstrap5
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
@@ -13,14 +13,16 @@ email_login = os.getenv("EMAIL_FROM")
 email_login_psw = os.getenv("EMAIL_FROM_psw")
 
 app = Flask(__name__)
-bootstrap = Bootstrap5(app)
 app.config['SECRET_KEY'] = os.getenv("PORTFOLIO_SECRET_KEY")
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///contacts.db"
+bootstrap = Bootstrap5(app)
 db = SQLAlchemy()
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///movies.db"
+db.init_app(app)
+
 
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(50), unique=True, nullable=False)
+    email = db.Column(db.String(50), nullable=False)
     name = db.Column(db.String(25), nullable=False)
     surname = db.Column(db.String(25), nullable=False)
     number = db.Column(db.String(15), nullable=False)
@@ -28,11 +30,11 @@ class Contact(db.Model):
 
 
 class ContactForm(FlaskForm):
-    name = StringField('First Name', validators=[DataRequired()])
-    surname = StringField('Last Name', validators=[DataRequired()])
-    email = EmailField('Email', validators=[DataRequired()])
-    number = TelField('Number', validators=[DataRequired()])
-    message = TextAreaField('Message', validators=[DataRequired()])
+    name = StringField('Name', render_kw={"placeholder": "Name"}, validators=[DataRequired()])
+    surname = StringField('Last Name', render_kw={"placeholder": "Last Name"}, validators=[DataRequired()])
+    email = EmailField('Email', render_kw={"placeholder": "Email"}, validators=[DataRequired()])
+    number = TelField('Number', render_kw={"placeholder": "Number"}, validators=[DataRequired()])
+    message = TextAreaField('Message', render_kw={"placeholder": "Message"}, validators=[DataRequired()])
     submit = SubmitField('SEND')
 
 
@@ -69,15 +71,18 @@ def contact():
 
         db.session.add(con)
         db.session.commit()
+        try:
+            with smtplib.SMTP("smtp.gmail.com") as connection:
+                connection.starttls()
+                connection.login(user=email_login, password=email_login_psw)
 
-        with smtplib.SMTP("smtp.gmail.com") as connection:
-            connection.starttls()
-            connection.login(user=email_login, password=email_login_psw)
+                connection.sendmail(from_addr=email,
+                                    to_addrs="rocco.caliandro@toptal.com",
+                                    msg=message)
+        except:
+            return render_template("index.html", form_complete=0)
 
-            connection.sendmail(from_addr=email,
-                                to_addrs="rocco.caliandro@toptal.com",
-                                msg=message)
-        return render_template("index.html", form_complete=True)
+        return render_template("index.html", form_complete=1)
 
     else:
         return render_template("contact.html", form=form)
