@@ -1,6 +1,6 @@
 import os
 import smtplib
-
+import ssl
 import datetime
 from flask_bootstrap import Bootstrap5
 from flask import Flask, render_template, request, redirect
@@ -78,13 +78,11 @@ def contact():
         db.session.commit()
 
         email_message = "Prova"
-        with smtplib.SMTP("smtp.gmail.com", 587) as connection:
-            connection.set_debuglevel(1)
-            connection.ehlo()
-            connection.starttls()
+        context = ssl.create_default_context()
+
+        with smtplib.SMTP("smtp.gmail.com", 465, context=context) as connection:
             connection.login(email_login, email_login_psw)
             connection.sendmail(email_login, email_to,  email_message)
-            connection.quit()
 
         """
         try:
