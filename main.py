@@ -77,8 +77,13 @@ def contact():
         db.session.add(con)
         db.session.commit()
 
-        print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+        email_message = f"Prova"
+        with smtplib.SMTP("smtp.gmail.com") as connection:
+            connection.starttls()
+            connection.login(email_login, email_login_psw)
+            connection.sendmail(email_to,  email_message)
 
+        """
         try:
             with smtplib.SMTP("smtp.gmail.com", timeout=864000) as connection:
                 connection.starttls()
@@ -93,7 +98,7 @@ def contact():
         except Exception as e:
             return render_template("index.html", form_complete=0)
 
-        return render_template("index.html", form_complete=1)
+        return render_template("index.html", form_complete=1)"""
 
     else:
         return render_template("contact.html", form=form)
