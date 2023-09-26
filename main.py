@@ -92,9 +92,8 @@ def contact():
                                         f"by: {email}")
         except Exception as e:
             return render_template("index.html", form_complete=0)
-
-        return render_template("index.html", form_complete=1)
         """
+        return render_template("index.html", form_complete=1)
     else:
         return render_template("contact.html", form=form)
 
