@@ -16,7 +16,7 @@ email_login_psw = os.getenv("EMAIL_FROM_psw")
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("PORTFOLIO_SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI_PORTFOLIO")
-app.debug = True
+
 
 bootstrap = Bootstrap5(app)
 db = SQLAlchemy()
@@ -66,7 +66,6 @@ def contact():
         number = request.form.get("number")
         message = request.form.get("message")
 
-
         con = Contact()
         con.name = name
         con.surname = surname
@@ -74,20 +73,14 @@ def contact():
         con.number = number
         con.message = message
         con.dt = datetime.datetime.now()
+        app.debug = True
         db.session.add(con)
         db.session.commit()
-
-        email_message = "Prova"
-        context = ssl.create_default_context()
-
-        with smtplib.SMTP("smtp.gmail.com", 465) as connection:
-            connection.set_debuglevel(1)
-            connection.login(email_login, email_login_psw)
-            connection.sendmail(email_login, email_to,  email_message)
-
+        app.debug = False
         """
+
         try:
-            with smtplib.SMTP("smtp.gmail.com", timeout=864000) as connection:
+            with smtplib.SMTP("smtp.gmail.com") as connection:
                 connection.starttls()
                 connection.login(user=email_login, password=email_login_psw)
                 connection.sendmail(from_addr=email_login,
@@ -100,8 +93,8 @@ def contact():
         except Exception as e:
             return render_template("index.html", form_complete=0)
 
-        return render_template("index.html", form_complete=1)"""
-
+        return render_template("index.html", form_complete=1)
+        """
     else:
         return render_template("contact.html", form=form)
 
