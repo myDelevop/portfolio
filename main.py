@@ -77,28 +77,31 @@ def contact():
         db.session.add(con)
         db.session.commit()
 
-        smtp_server = "smtp.gmail.com"
-        port = 587  # For starttls
-        sender_email = "rockdesires@gmail.com"
-        password = email_login_psw
 
         # Create a secure SSL context
         context = ssl.create_default_context()
 
         # Try to log in to server and send email
         try:
-            server = smtplib.SMTP(smtp_server, port)
+            server = smtplib.SMTP("smtp.gmail.com", 587)
             server.ehlo()  # Can be omitted
             server.starttls(context=context)  # Secure the connection
             server.ehlo()  # Can be omitted
-            server.login(sender_email, password)
+            server.login(email_login, email_login_psw)
             # TODO: Send email here
+
+            server.sendmail(from_addr=email_login,
+                            to_addrs="rocco.caliandro@toptal.com",
+                            msg=f"Subject: Message from {name} {surname} with email: {email}\n\n"
+                                f"You've received a message from {name} {surname} with email: {email}"
+                                f"at {con.dt}  o'clock.\nThe contact number is: {number}.\n\n\n"
+                                f"Let's think to the content of the message:\n\n\n\n {message}\n\n"
+                                f"by: {email}")
         except Exception as e:
             # Print any error messages to stdout
             return render_template("index.html", form_complete=0)
         finally:
             server.quit()
-
 
         app.debug = False
         # try:
@@ -106,13 +109,6 @@ def contact():
             #print("CIZO")
             # connection.starttls()
             # connection.login(user=email_login, password=email_login_psw)
-            # connection.sendmail(from_addr=email_login,
-            #                     to_addrs="rocco.caliandro@toptal.com",
-            #                     msg=f"Subject: Message from {name} {surname} with email: {email}\n\n"
-            #                         f"You've received a message from {name} {surname} with email: {email}"
-            #                         f"at {con.dt}  o'clock.\nThe contact number is: {number}.\n\n\n"
-            #                         f"Let's think to the content of the message:\n\n\n\n {message}\n\n"
-            #                         f"by: {email}")
 
         # except Exception as e:
         # return render_template("index.html", form_complete=0)
