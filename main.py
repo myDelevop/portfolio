@@ -17,10 +17,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("PORTFOLIO_SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI_PORTFOLIO")
 
+
 bootstrap = Bootstrap5(app)
 db = SQLAlchemy()
 db.init_app(app)
-
 
 class Contact(db.Model):
     __tablename__ = "contacts"
