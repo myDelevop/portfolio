@@ -78,7 +78,7 @@ def contact():
         db.session.commit()
 
         print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-        """
+
         try:
             with smtplib.SMTP("smtp.gmail.com") as connection:
                 connection.starttls()
@@ -92,7 +92,7 @@ def contact():
                                         f"by: {email}")
         except Exception as e:
             return render_template("index.html", form_complete=0)
-"""
+
         return render_template("index.html", form_complete=1)
 
     else:
