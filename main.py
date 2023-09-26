@@ -80,7 +80,8 @@ def contact():
         email_message = "Prova"
         context = ssl.create_default_context()
 
-        with smtplib.SMTP("smtp.gmail.com", 465, context=context) as connection:
+        with smtplib.SMTP("smtp.gmail.com", 465) as connection:
+            connection.set_debuglevel(1)
             connection.login(email_login, email_login_psw)
             connection.sendmail(email_login, email_to,  email_message)
 
