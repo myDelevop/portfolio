@@ -17,10 +17,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("PORTFOLIO_SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI_PORTFOLIO")
 
-
 bootstrap = Bootstrap5(app)
 db = SQLAlchemy()
 db.init_app(app)
+
 
 class Contact(db.Model):
     __tablename__ = "contacts"
@@ -77,22 +77,22 @@ def contact():
         db.session.add(con)
         db.session.commit()
         app.debug = False
-        """
 
-        try:
-            with smtplib.SMTP("smtp.gmail.com") as connection:
-                connection.starttls()
-                connection.login(user=email_login, password=email_login_psw)
-                connection.sendmail(from_addr=email_login,
-                                    to_addrs="rocco.caliandro@toptal.com",
-                                    msg=f"Subject: Message from {name} {surname} with email: {email}\n\n"
-                                        f"You've received a message from {name} {surname} with email: {email}"
-                                        f"at {con.dt}  o'clock.\nThe contact number is: {number}.\n\n\n"
-                                        f"Let's think to the content of the message:\n\n\n\n {message}\n\n"
-                                        f"by: {email}")
-        except Exception as e:
-            return render_template("index.html", form_complete=0)
-        """
+        # try:
+        with smtplib.SMTP("smtp.gmail.com") as connection:
+            connection.starttls()
+            connection.login(user=email_login, password=email_login_psw)
+            # connection.sendmail(from_addr=email_login,
+            #                     to_addrs="rocco.caliandro@toptal.com",
+            #                     msg=f"Subject: Message from {name} {surname} with email: {email}\n\n"
+            #                         f"You've received a message from {name} {surname} with email: {email}"
+            #                         f"at {con.dt}  o'clock.\nThe contact number is: {number}.\n\n\n"
+            #                         f"Let's think to the content of the message:\n\n\n\n {message}\n\n"
+            #                         f"by: {email}")
+
+        # except Exception as e:
+        # return render_template("index.html", form_complete=0)
+
         return render_template("index.html", form_complete=1)
     else:
         return render_template("contact.html", form=form)
