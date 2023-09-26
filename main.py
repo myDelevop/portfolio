@@ -1,6 +1,6 @@
 import os
 import smtplib
-
+import ssl
 import datetime
 from flask_bootstrap import Bootstrap5
 from flask import Flask, render_template, request, redirect
@@ -23,6 +23,7 @@ db.init_app(app)
 
 
 class Contact(db.Model):
+    __tablename__ = "contacts"
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), nullable=False)
     name = db.Column(db.String(25), nullable=False)
@@ -59,12 +60,13 @@ def about():
 def contact():
     form = ContactForm()
     if form.validate_on_submit():
+
+        # 1 - Save to DB
         name = request.form.get("name")
         surname = request.form.get("surname")
         email = request.form.get("email")
         number = request.form.get("number")
         message = request.form.get("message")
-
 
         con = Contact()
         con.name = name
@@ -73,28 +75,36 @@ def contact():
         con.number = number
         con.message = message
         con.dt = datetime.datetime.now()
+        app.debug = True
         db.session.add(con)
         db.session.commit()
 
-        print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+        # 2 - Send an e-mail
+        context = ssl.create_default_context()
 
+        # Try to log in to server and send email
         try:
-            with smtplib.SMTP("smtp.gmail.com") as connection:
-                connection.starttls()
-                connection.login(user=email_login, password=email_login_psw)
-                connection.sendmail(from_addr=email_login,
-                                    to_addrs="rocco.caliandro@toptal.com",
-                                    msg=f"Subject: Message from {name} {surname} with email: {email}\n\n"
-                                        f"You've received a message from {name} {surname} with email: {email}"
-                                        f"at {con.dt}  o'clock.\nThe contact number is: {number}.\n\n\n"
-                                        f"Let's think to the content of the message:\n\n\n\n {message}\n\n"
-                                        f"by: {email}")
+            server = smtplib.SMTP("smtp.gmail.com", 587)
+            server.ehlo()  # Can be omitted
+            server.starttls(context=context)  # Secure the connection
+            server.ehlo()  # Can be omitted
+            server.login(email_login, email_login_psw)
+
+            server.sendmail(from_addr=email,
+                            to_addrs="rocco.caliandro@toptal.com",
+                            msg=f"Subject: Message from {name} {surname} with email: {email}\n\n"
+                                f"You've received a message from {name} {surname} with email: {email}"
+                                f" at {con.dt}  o'clock.\nThe contact number is: {number}.\n\n\n"
+                                f"Let's think to the content of the message:\n\n\n\n {message}\n\n"
+                                f"by: {email}")
         except Exception as e:
-            return str(e)
-            # return render_template("index.html", form_complete=0)
+            # Print any error messages to stdout
+            return render_template("index.html", form_complete=0)
+        finally:
+            app.debug = False
+            server.quit()
 
         return render_template("index.html", form_complete=1)
-
     else:
         return render_template("contact.html", form=form)
 
