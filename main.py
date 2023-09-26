@@ -83,13 +83,13 @@ def contact():
             with smtplib.SMTP("smtp.gmail.com") as connection:
                 connection.starttls()
                 connection.login(user=email_login, password=email_login_psw)
-                connection.sendmail(from_addr=email_login,
+                """connection.sendmail(from_addr=email_login,
                                     to_addrs="rocco.caliandro@toptal.com",
                                     msg=f"Subject: Message from {name} {surname} with email: {email}\n\n"
                                         f"You've received a message from {name} {surname} with email: {email}"
                                         f"at {con.dt}  o'clock.\nThe contact number is: {number}.\n\n\n"
                                         f"Let's think to the content of the message:\n\n\n\n {message}\n\n"
-                                        f"by: {email}")
+                                        f"by: {email}")"""
         except Exception as e:
             return render_template("index.html", form_complete=0)
 
