@@ -80,7 +80,8 @@ def contact():
 
         # try:
         with smtplib.SMTP("smtp.gmail.com") as connection:
-            connection.starttls()
+            print("CIZO")
+            # connection.starttls()
             # connection.login(user=email_login, password=email_login_psw)
             # connection.sendmail(from_addr=email_login,
             #                     to_addrs="rocco.caliandro@toptal.com",
