@@ -15,8 +15,8 @@ email_login_psw = os.getenv("EMAIL_FROM_psw")
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("PORTFOLIO_SECRET_KEY")
-#app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI_PORTFOLIO")
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://portfolio_bcot_user:igkDFtFBcX51lAI5p3Y8uDhXCGIherRk@dpg-ck98m39ehpqs73ap13eg-a.oregon-postgres.render.com/portfolio_bcot"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI_PORTFOLIO")
+#app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://portfolio_bcot_user:igkDFtFBcX51lAI5p3Y8uDhXCGIherRk@dpg-ck98m39ehpqs73ap13eg-a.oregon-postgres.render.com/portfolio_bcot"
 
 bootstrap = Bootstrap5(app)
 db = SQLAlchemy()
