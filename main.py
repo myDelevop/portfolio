@@ -60,6 +60,8 @@ def about():
 def contact():
     form = ContactForm()
     if form.validate_on_submit():
+
+        # 1 - Save to DB
         name = request.form.get("name")
         surname = request.form.get("surname")
         email = request.form.get("email")
@@ -77,8 +79,7 @@ def contact():
         db.session.add(con)
         db.session.commit()
 
-
-        # Create a secure SSL context
+        # 2 - Send an e-mail
         context = ssl.create_default_context()
 
         # Try to log in to server and send email
@@ -88,30 +89,20 @@ def contact():
             server.starttls(context=context)  # Secure the connection
             server.ehlo()  # Can be omitted
             server.login(email_login, email_login_psw)
-            # TODO: Send email here
 
-            server.sendmail(from_addr=email_login,
+            server.sendmail(from_addr=email,
                             to_addrs="rocco.caliandro@toptal.com",
                             msg=f"Subject: Message from {name} {surname} with email: {email}\n\n"
                                 f"You've received a message from {name} {surname} with email: {email}"
-                                f"at {con.dt}  o'clock.\nThe contact number is: {number}.\n\n\n"
+                                f" at {con.dt}  o'clock.\nThe contact number is: {number}.\n\n\n"
                                 f"Let's think to the content of the message:\n\n\n\n {message}\n\n"
                                 f"by: {email}")
         except Exception as e:
             # Print any error messages to stdout
             return render_template("index.html", form_complete=0)
         finally:
+            app.debug = False
             server.quit()
-
-        app.debug = False
-        # try:
-        #with smtplib.SMTP("smtp.gmail.com") as connection:
-            #print("CIZO")
-            # connection.starttls()
-            # connection.login(user=email_login, password=email_login_psw)
-
-        # except Exception as e:
-        # return render_template("index.html", form_complete=0)
 
         return render_template("index.html", form_complete=1)
     else:
