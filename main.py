@@ -77,11 +77,14 @@ def contact():
         db.session.add(con)
         db.session.commit()
 
-        email_message = f"Prova"
-        with smtplib.SMTP("smtp.gmail.com") as connection:
+        email_message = "Prova"
+        with smtplib.SMTP("smtp.gmail.com", 587) as connection:
+            connection.set_debuglevel(1)
+            connection.ehlo()
             connection.starttls()
             connection.login(email_login, email_login_psw)
-            connection.sendmail(email_to,  email_message)
+            connection.sendmail(email_login, email_to,  email_message)
+            connection.quit()
 
         """
         try:
